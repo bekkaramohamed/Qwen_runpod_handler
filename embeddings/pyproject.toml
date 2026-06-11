@@ -1,0 +1,9 @@
+[project]
+name = "miip-embeddings-handler"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "runpod>=1.7",
+    "vllm>=0.8.5",
+    "huggingface_hub",
+]

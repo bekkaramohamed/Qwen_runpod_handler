@@ -1,0 +1,11 @@
+[project]
+name = "miip-rerank-handler"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "runpod>=1.7",
+    "torch>=2.3",
+    "transformers>=4.51",
+    "accelerate",
+    "huggingface_hub",
+]
