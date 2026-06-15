@@ -27,6 +27,17 @@ QUERY_INSTRUCTION = (
 )
 
 
+# Qwen3-Embedding supporte MRL (Matryoshka) : on tronque le vecteur 2560 → 1024
+# puis on renormalise (L2). ~1-2 % de qualité en moins, RAM Milvus ÷ 2,5.
+OUTPUT_DIM = 1024
+
+
+def _truncate_normalize(vec: list[float], dim: int = OUTPUT_DIM) -> list[float]:
+    v = vec[:dim]
+    norm = sum(x * x for x in v) ** 0.5 or 1.0
+    return [x / norm for x in v]
+
+
 def handler(job):
     inputs = job["input"]
     texts = inputs.get("texts")
@@ -38,7 +49,7 @@ def handler(job):
             texts = [QUERY_INSTRUCTION + t for t in texts]
         outputs = llm.embed(texts)
         return {
-            "embeddings": [o.outputs.embedding for o in outputs],
+            "embeddings": [_truncate_normalize(o.outputs.embedding) for o in outputs],
             "status": "success",
         }
     except Exception as e:
