@@ -4,7 +4,8 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
     "runpod>=1.7",
-    "torch==2.6.0",
+    # torch n'est PAS listé ici : il est installé dans le Dockerfile depuis
+    # l'index cu128 (torch==2.8.0) pour le support Blackwell sm_120.
     "transformers==4.51.3",
     "accelerate==1.6.0",
     "huggingface_hub",

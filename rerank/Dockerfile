@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
+FROM nvidia/cuda:12.8.1-runtime-ubuntu22.04
 
 # Logs Python non bufferisés : sans ça, un crash au boot perd tout le traceback
 ENV PYTHONUNBUFFERED=1
@@ -12,7 +12,11 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml ./
-RUN uv venv && uv pip install -r pyproject.toml
+# torch installé depuis l'index cu128 (CUDA 12.8) → support GPU Blackwell sm_120
+# (les wheels PyPI par défaut ne couvrent que jusqu'à sm_90)
+RUN uv venv \
+    && uv pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128 \
+    && uv pip install -r pyproject.toml
 
 # Pré-télécharger le modèle dans l'image (cold start réduit de ~2 min → ~20 s)
 RUN .venv/bin/python -c "from huggingface_hub import snapshot_download; \
