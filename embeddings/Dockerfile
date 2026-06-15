@@ -1,5 +1,8 @@
 FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
 
+# Logs Python non bufferisés : sans ça, un crash au boot perd tout le traceback
+ENV PYTHONUNBUFFERED=1
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.11 python3.11-venv python3-pip \
     && rm -rf /var/lib/apt/lists/*
